@@ -1,0 +1,88 @@
+# Java Gradle CircleCI 2.0 configuration file
+version: 2
+jobs:
+        build:
+          docker:
+            - image: maciejmalecki/c64libci:0.1.6
+
+          working_directory: ~/repo
+
+          environment:
+            JVM_OPTS: -Xms256m -Xmx768m
+            TERM: dumb
+
+          steps:
+            - checkout
+            - attach_workspace:
+                at: ./artifacts
+            - run: ./gradlew build
+
+        buildTagged:
+          docker:
+            - image: maciejmalecki/c64libci:0.1.6
+
+          working_directory: ~/repo
+
+          environment:
+            JVM_OPTS: -Xms256m -Xmx768m
+            TERM: dumb
+
+          steps:
+            - checkout
+            - attach_workspace:
+                at: ./artifacts
+            - run: mkdir out && ls -al
+            - run: ./gradlew build link -PversionTag=${CIRCLE_TAG} -Pvariant=zzap
+            - run: ./gradlew build link -PversionTag=${CIRCLE_TAG} -Pvariant=e
+            # - run: mv src/kickass/tony-loader.prg tony-${CIRCLE_TAG}.prg
+            - run: mv tonyz.prg tony-${CIRCLE_TAG}.prg
+            - run: cp tony-${CIRCLE_TAG}.prg out
+            - run: cp tony-${CIRCLE_TAG}zzap.prg out
+            - run: cp tony-${CIRCLE_TAG}e.prg out
+            - run: cp tony-${CIRCLE_TAG}zzap.d64 out
+            - run: cp tony-${CIRCLE_TAG}e.d64 out
+            - run: cd out && ls -al
+            - persist-to-workspace:
+                root: .
+                paths:
+                    - out
+
+
+        publish:
+          docker:
+            - image: cibuilds/github:0.10
+          steps:
+            - attach_workspace:
+                at: ./artifacts
+            - run:
+                name: "Publish PRG on GitHub"
+                command: |
+                    ls ./artifacts/out
+                    ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace ${CIRCLE_TAG} ./artifacts/out
+
+workflows:
+    version: 2
+    commit:
+        jobs:
+            - build
+
+    publish:
+        jobs:
+            - buildTagged:
+                filters:
+                    branches:
+                        ignore:
+                            - /.*/
+                    tags:
+                        only:
+                            - /^([0-9]+)\.([0-9]+).*$/
+            - publish:
+                filters:
+                    branches:
+                        ignore:
+                            - /.*/
+                    tags:
+                        only:
+                            - /^([0-9]+)\.([0-9]+).*$/
+                requires:
+                    - buildTagged
