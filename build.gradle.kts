@@ -3,8 +3,8 @@ import com.github.c64lib.rbt.shared.domain.Color
 import com.github.c64lib.rbt.shared.domain.Axis
 import com.github.c64lib.rbt.shared.domain.OutputFormat
 
-val versionTag: String? = project.findProperty("versionTag") as String?
-val variant: String? = project.findProperty("variant") as String?
+val versionTag: String = project.findProperty("versionTag") as String? ?: ""
+val variant: String = project.findProperty("variant") as String? ?: "e"
 
 plugins {
     id("com.github.c64lib.retro-assembler") version "1.7.6"
@@ -107,43 +107,6 @@ tasks.matching { it.name == "build" }.configureEach {
 preprocess {
 
     // TONY's assets
-
-    goattracker {
-      getInput().set(file("src/music/humbug2.sng"))
-      getUseBuildDir().set(true)
-      music {
-        getOutput().set(file("humbug2.sid"))
-        bufferedSidWrites = true
-        sfxSupport = true
-        storeAuthorInfo = false
-        playerMemoryLocation = 0xA0
-      }
-    }
-
-    goattracker {
-      getInput().set(file("src/music/sanction.sng"))
-      getUseBuildDir().set(true)
-      music {
-        getOutput().set(file("sanction.sid"))
-        bufferedSidWrites = true
-        sfxSupport = true
-        storeAuthorInfo = false
-        playerMemoryLocation = 0xA0
-      }
-    }
-
-    goattracker {
-      getInput().set(file("src/music/funktest.sng"))
-      getUseBuildDir().set(true)
-      music {
-        getOutput().set(file("funktest.sid"))
-        bufferedSidWrites = true
-        sfxSupport = true
-        storeAuthorInfo = false
-        playerMemoryLocation = 0xE0
-      }
-    }
-
     charpad {
         getInput().set(file("src/charpad/belka-nowa-20023-v5.ctm"))
         getUseBuildDir().set(true)
