@@ -1,0 +1,16 @@
+Rafal Dudek
+	
+Załączniki14 lip 2023, 16:39 (5 dni temu)
+	
+do mnie
+1) uznałeś że eliksir chroni przed wszystkim oprócz głazów i pali, więc tak jest teraz
+2) za zebranie eliksiru dostajemy 100 punktów, za zabicie przeciwnika eliksirem dostajemy 50 punktów, za zebranie klejnotu 200 punktów, za otwarcie drzwi 50 punktów, za zebranie klucza wyjściowego jest 100 punktów, zebranie zwykłego klucza to 50 punktów
+3) nie ma extra życia bo i tak jest zbyt łatwo już
+4) czasu jest dużo na każdy level, ale i tak chyba tam niezbyt napisałem stratę życia po upływie czasu, musiałbym to jeszcze przetestować
+5) jak pisałem wszyscy giną oprócz głazów i pali (no i płomieni)
+
+i jeszcze najważniejsze, mój przelicznik punktów na koniec levelu po przejściu
+za każde pozostałe życie dostajemy 100 punktów i za każdą pozostałą minutę czasu dostajemy 100 punktów
+to jest kod z przejścia levelu
+
+G\l to ilość naszych żyć (serduszek), a Int(GameTime/60) to ilość minut czasu jaka pozostała nam
